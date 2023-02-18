@@ -42,7 +42,7 @@ resource "aws_vpc" "max_vpc" {
   instance_tenancy = "default"
 
   tags = {
-    Name = "main"
+    Name = "max_vpc"
   }
 }
 
@@ -60,7 +60,7 @@ resource "aws_subnet" "max_sbn-priv" {
   cidr_block = "10.0.17.0/24"
 
   tags = {
-    Name = "Main"
+    Name = "max_sbn-priv"
   }
 }
 
@@ -72,7 +72,6 @@ resource "aws_route_table" "example" {
   vpc_id = aws_vpc.max_vpc.id
 
   route {
-    cidr_block = "10.0.34.0/24"
     gateway_id = aws_internet_gateway.max-gw.id
   }
 }
