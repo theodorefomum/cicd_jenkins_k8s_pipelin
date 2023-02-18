@@ -3,7 +3,7 @@ resource "aws_eks_cluster" "max_cluster" {
   role_arn = aws_iam_role.max_iam_role.arn
 
   vpc_config {
-    subnet_ids = [aws_subnet.max_sbn-pub.id]
+    subnet_ids = [aws_subnet.max_sbn-pub.id, max_sbn-pub1.id]
   }
 }
 
@@ -49,6 +49,16 @@ resource "aws_vpc" "max_vpc" {
 resource "aws_subnet" "max_sbn-pub" {
   vpc_id            = aws_vpc.max_vpc.id
   cidr_block        = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
+
+  tags = {
+    Name = "Main"
+  }
+}
+
+resource "aws_subnet" "max_sbn-pub1" {
+  vpc_id            = aws_vpc.max_vpc.id
+  cidr_block        = "10.0.50.0/24"
   availability_zone = "us-east-1a"
 
   tags = {
