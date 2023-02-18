@@ -57,7 +57,7 @@ resource "aws_subnet" "max_sbn-pub" {
 
 resource "aws_subnet" "max_sbn-priv" {
   vpc_id     = aws_vpc.max_vpc.id
-  cidr_block = "10.0.12.0/24"
+  cidr_block = "10.0.17.0/24"
 
   tags = {
     Name = "Main"
@@ -72,7 +72,7 @@ resource "aws_route_table" "example" {
   vpc_id = aws_vpc.max_vpc.id
 
   route {
-    cidr_block = "10.0.8.0/24"
+    cidr_block = "10.0.34.0/24"
     gateway_id = aws_internet_gateway.max-gw.id
   }
 }
