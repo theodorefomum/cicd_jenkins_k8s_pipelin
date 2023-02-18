@@ -72,6 +72,7 @@ resource "aws_route_table" "example" {
   vpc_id = aws_vpc.max_vpc.id
 
   route {
+cidr_block = "10.0.32.0/24"
     gateway_id = aws_internet_gateway.max-gw.id
   }
 }
