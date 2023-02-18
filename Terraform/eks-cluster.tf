@@ -47,8 +47,9 @@ resource "aws_vpc" "max_vpc" {
 }
 
 resource "aws_subnet" "max_sbn-pub" {
-  vpc_id     = aws_vpc.max_vpc.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id            = aws_vpc.max_vpc.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
 
   tags = {
     Name = "Main"
@@ -56,8 +57,9 @@ resource "aws_subnet" "max_sbn-pub" {
 }
 
 resource "aws_subnet" "max_sbn-priv" {
-  vpc_id     = aws_vpc.max_vpc.id
-  cidr_block = "10.0.17.0/24"
+  vpc_id            = aws_vpc.max_vpc.id
+  cidr_block        = "10.0.17.0/24"
+  availability_zone = "us-east-1b"
 
   tags = {
     Name = "max_sbn-priv"
@@ -72,7 +74,7 @@ resource "aws_route_table" "example" {
   vpc_id = aws_vpc.max_vpc.id
 
   route {
-cidr_block = "10.0.32.0/24"
+    cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.max-gw.id
   }
 }
