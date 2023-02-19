@@ -24,15 +24,15 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 script {
-                    docker.build("maxrepo:${IMAGE_TAG}")
+                  sh "docker build -t maxrepo ."
                 }
             }
         }
 
         stage('Push to ECR') {
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                     script {
+                        
                         def ecr_login_cmd = sh(script: "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com", returnStdout: true).trim()
                         sh(script: ecr_login_cmd)
                         docker.withRegistry("https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com", 'ecr') {
