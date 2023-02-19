@@ -24,7 +24,7 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 script {
-                  sh "docker build -t maxrepo ."
+                  sh "sudo docker build -t maxrepo ."
                 }
             }
         }
