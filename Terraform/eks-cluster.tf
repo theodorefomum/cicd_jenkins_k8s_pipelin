@@ -34,7 +34,7 @@ resource "aws_eks_node_group" "worker-node-group" {
 
   scaling_config {
     desired_size = 1
-    max_size     = 1
+    max_size     = 2
     min_size     = 1
   }
 
@@ -112,7 +112,7 @@ resource "aws_route_table_association" "private_association" {
 }
 
 resource "aws_route_table_association" "private_association1" {
-  subnet_id     = aws_subnet.max_sbn-priv1.id
+  subnet_id     = aws_subnet.max_sbn-priv.id
   route_table_id = aws_route_table.private_route.id
 }
 
@@ -171,7 +171,7 @@ resource "aws_internet_gateway" "max-gw" {
 
 resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.max_sbn-priv.id
+  subnet_id     = aws_subnet.max_sbn-pub.id
 }
 
 resource "aws_eip" "nat" {
