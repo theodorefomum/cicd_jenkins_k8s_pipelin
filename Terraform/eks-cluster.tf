@@ -59,7 +59,7 @@ resource "aws_subnet" "max_sbn-pub" {
 resource "aws_subnet" "max_sbn-pub1" {
   vpc_id            = aws_vpc.max_vpc.id
   cidr_block        = "10.0.50.0/24"
-  availability_zone = "us-east-1a"
+  availability_zone = "us-east-1b"
 
   tags = {
     Name = "Main"
