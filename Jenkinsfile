@@ -22,6 +22,30 @@ pipeline {
             }
         }
 
+        stage('Build Docker image') {
+            steps {
+                script {
+                  sh "sudo docker build -t maxrepo ."
+                }
+            }
+        }
+
+        stage('Push to ECR') {
+            steps {
+                script {
+                    // Log in to ECR
+                    withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ECR_REPOSITORY}"
+                    }
+                    // Tag the Docker image and push it to ECR
+                    sh "sudo docker tag my-docker-image ${ECR_REPOSITORY}:latest"
+                    sh "sudo docker push ${ECR_REPOSITORY}:latest"
+                        }
+                    }
+                }
+            }
+        }
+
         stage("Deploy to EKS") {
             steps {
                 script {
