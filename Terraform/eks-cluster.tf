@@ -158,7 +158,7 @@ resource "aws_subnet" "max_sbn-priv" {
 resource "aws_subnet" "max_sbn-priv1" {
   vpc_id            = aws_vpc.max_vpc.id
   cidr_block        = "10.0.67.0/24"
-  availability_zone = "us-east-1b"
+  availability_zone = "us-east-1c"
 
   tags = {
     Name = "max_sbn-priv"
