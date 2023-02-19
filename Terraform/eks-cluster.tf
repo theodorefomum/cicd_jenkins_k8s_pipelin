@@ -3,7 +3,7 @@ resource "aws_eks_cluster" "max_cluster" {
   role_arn = aws_iam_role.eks-iam-role.arn
 
   vpc_config {
-    subnet_ids = [aws_subnet.max_sbn-pub.id, aws_subnet.max_sbn-pub1.id]
+    subnet_ids = [aws_subnet.max_sbn-priv.id, aws_subnet.max_sbn-priv1.id]
   }
   depends_on = [
     aws_iam_role.eks-iam-role,
@@ -29,7 +29,7 @@ resource "aws_eks_node_group" "worker-node-group" {
   cluster_name    = aws_eks_cluster.max_cluster.name
   node_group_name = "devopsthehardway-workernodes"
   node_role_arn   = aws_iam_role.workernodes.arn
-  subnet_ids      = [aws_subnet.max_sbn-pub.id, aws_subnet.max_sbn-pub1.id]
+  subnet_ids      = [aws_subnet.max_sbn-priv.id, aws_subnet.max_sbn-priv1.id]
   instance_types  = ["t2.micro"]
 
   scaling_config {
