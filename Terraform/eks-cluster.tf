@@ -3,7 +3,7 @@ resource "aws_eks_cluster" "max_cluster" {
   role_arn = aws_iam_role.max_iam_role.arn
 
   vpc_config {
-    subnet_ids = [aws_subnet.max_sbn-pub.id, max_sbn-pub1.id]
+    subnet_ids = [aws_subnet.max_sbn-pub.id, aws_subnet.max_sbn-pub1.id]
   }
 }
 
