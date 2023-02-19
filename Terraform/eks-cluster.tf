@@ -174,11 +174,6 @@ resource "aws_nat_gateway" "nat_gateway" {
   subnet_id     = aws_subnet.max_sbn-priv.id
 }
 
-resource "aws_nat_gateway" "nat_gateway1" {
-  allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.max_sbn-priv1.id
-}
-
 resource "aws_eip" "nat" {
   vpc = true
 }
