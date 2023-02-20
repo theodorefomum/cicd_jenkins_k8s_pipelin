@@ -11,60 +11,61 @@ pipeline {
         REPOSITORY_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}"
     }
 
-stages {
-    stage("Create an EKS Cluster") {
-        steps {
-            script {
-                dir('Terraform') {
-                    sh "terraform init"
-                    sh "terraform apply -auto-approve"
+    stages {
+        stage("Create an EKS Cluster") {
+            steps {
+                script {
+                    dir('Terraform') {
+                        sh "terraform init"
+                        sh "terraform apply -auto-approve"
+                    }
                 }
             }
         }
-    }
 
-    stage('Logging into AWS ECR') {
-        steps {
-            script {
-                sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+        stage('Logging into AWS ECR') {
+            steps {
+                script {
+                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+                }
             }
         }
-    }
 
-    stage('Building image') {
-        steps {
-            script {
-                dockerImage = docker.build "${ECR_REPOSITORY}:${IMAGE_TAG}"
+        stage('Building image') {
+            steps {
+                script {
+                    dockerImage = docker.build "${ECR_REPOSITORY}:${IMAGE_TAG}"
+                }
             }
         }
-    }
 
-    stage('Pushing to ECR') {
-        steps {
-            script {
-                sh "docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}"
-                sh "docker push ${REPOSITORY_URI}:${IMAGE_TAG}"
+        stage('Pushing to ECR') {
+            steps {
+                script {
+                    sh "docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}"
+                    sh "docker push ${REPOSITORY_URI}:${IMAGE_TAG}"
+                }
             }
         }
-    }
 
-    stage('Push to ECR') {
-        steps {
-            script {
-                sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-                sh "docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}"
-                sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}"
+        stage('Push to ECR') {
+            steps {
+                script {
+                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+                    sh "docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}"
+                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}"
+                }
             }
         }
-    }
 
-    stage("Deploy to EKS") {
-        steps {
-            script {
-                dir('kubernetes') {
-                    sh "aws eks update-kubeconfig --name max_prod_cluster"
-                    sh "kubectl apply -f deployment.yaml"
-                    sh "kubectl apply -f service.yaml"
+        stage("Deploy to EKS") {
+            steps {
+                script {
+                    dir('kubernetes') {
+                        sh "aws eks update-kubeconfig --name max_prod_cluster"
+                        sh "kubectl apply -f deployment.yaml"
+                        sh "kubectl apply -f service.yaml"
+                    }
                 }
             }
         }
