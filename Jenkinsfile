@@ -26,7 +26,7 @@ pipeline {
         stage('Logging into AWS ECR') {
             steps {
                 script {
-                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+                    checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/MaxcellAyim/cicd_jenkins_k8s_pipelin']])
                 }
             }
         }
