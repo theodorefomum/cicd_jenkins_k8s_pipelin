@@ -39,15 +39,6 @@ pipeline {
             }
         }
 
-        stage('Pushing to ECR') {
-            steps {
-                script {
-                    sh "docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}"
-                    sh "docker push ${REPOSITORY_URI}:${IMAGE_TAG}"
-                }
-            }
-        }
-
         stage('Push to ECR') {
             steps {
                 script {
