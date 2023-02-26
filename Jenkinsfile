@@ -7,7 +7,7 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
         ECR_REPOSITORY = 'maxrepo'
         IMAGE_TAG = 'latest'
-        AWS_ACCOUNT_ID = '811286130539'
+        AWS_ACCOUNT_ID = '203576913699'
         REPOSITORY_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}"
     }
 
@@ -17,7 +17,7 @@ pipeline {
                 script {
                     dir('Terraform') {
                         sh "terraform init"
-                        sh "terraform destroy -auto-approve"
+                        sh "terraform apply -auto-approve"
                     }
                 }
             }
