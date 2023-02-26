@@ -1,14 +1,14 @@
 resource "aws_instance" "jenkins-server" {
-  ami           = "ami-0aa7d40eeae50c9a9"
-  instance_type = "t2.micro"
+  ami                    = "ami-0aa7d40eeae50c9a9"
+  instance_type          = "t2.micro"
   vpc_security_group_ids = ["${aws_security_group.jenkinssg.id}"]
-  key_name  =   "AYIMM"
+  key_name               = "AYIMM"
 
   tags = {
     Name = "Jenkins-prod"
   }
-  
-  user_data              = <<EOF
+
+  user_data = <<EOF
     #!/bin/bash
     yum update -y
 
@@ -29,6 +29,12 @@ resource "aws_instance" "jenkins-server" {
     sudo curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.23.6/bin/linux/amd64/kubectl
     sudo chmod +x ./kubectl
     sudo mkdir -p $HOME/bin && sudo cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+
+    # Install necessary packages for Docker
+    sudo yum install -y docker
+    sudo service docker start
+    sudo usermod -aG docker $USER
+    sudo chkconfig docker on
   EOF
 }
 resource "aws_security_group" "jenkinssg" {
@@ -49,7 +55,7 @@ resource "aws_security_group" "jenkinssg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-    ingress {
+  ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
