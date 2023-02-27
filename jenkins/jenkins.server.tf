@@ -1,6 +1,6 @@
 resource "aws_instance" "jenkins-server" {
   ami                    = "ami-0aa7d40eeae50c9a9"
-  instance_type          = "t2.micro"
+  instance_type          = "t2.small"
   vpc_security_group_ids = ["${aws_security_group.jenkinssg.id}"]
   key_name               = "AYIMM"
 
