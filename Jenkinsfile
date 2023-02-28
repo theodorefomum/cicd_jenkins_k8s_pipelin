@@ -6,7 +6,7 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION = "us-east-1"
         ECR_REPOSITORY = 'maxrepo'
-        IMAGE_TAG = ${github.sha}
+        IMAGE_TAG = "${github.sha}"
         AWS_ACCOUNT_ID = '203576913699'
         REPOSITORY_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}"
     }
