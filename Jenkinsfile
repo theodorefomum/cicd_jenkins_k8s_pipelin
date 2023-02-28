@@ -9,7 +9,7 @@ pipeline {
         EKS_CLUSTER_NAME = 'max_prod_cluster'
         NAMESPACE = 'default'
         AWS_ACCOUNT_ID = '203576913699'
-        IMAGE_TAG = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        IMAGE_TAG = 'latest'
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}"
     }
 
