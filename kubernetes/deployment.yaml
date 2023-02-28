@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: 203576913699.dkr.ecr.us-east-1.amazonaws.com/maxrepo:latest@sha256:5f47cc9f2a1665416b141e5cbdbd919fe95c1a17d916d9e30a49472c605e49a2
+        image: 203576913699.dkr.ecr.us-east-1.amazonaws.com/maxrepo:$IMAGE_TAG
         ports:
         - containerPort: 80
