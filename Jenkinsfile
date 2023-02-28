@@ -6,9 +6,11 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION = "us-east-1"
         ECR_REPOSITORY = 'maxrepo'
-        IMAGE_TAG = "${github.sha}"
+        EKS_CLUSTER_NAME = 'max_prod_cluster'
+        NAMESPACE = 'default'
         AWS_ACCOUNT_ID = '203576913699'
-        REPOSITORY_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}"
+        IMAGE_TAG = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}"
     }
 
     stages {
@@ -39,26 +41,21 @@ pipeline {
             }
         }
 
-        stage('Push to ECR') {
+        stage('Deploy to EKS') {
             steps {
                 script {
-                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-                    sh "docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}"
-                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}"
+                    sh "aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${AWS_DEFAULT_REGION} --kubeconfig /tmp/kubeconfig"
+                    sh "kubectl config use-context ${EKS_CLUSTER_NAME} --kubeconfig /tmp/kubeconfig"
+                    sh "kubectl set image keubernetes/deployment.yaml nginx=${REPOSITORY_URI}:${IMAGE_TAG} -n ${NAMESPACE} --kubeconfig /tmp/kubeconfig"
+                    sh "kubectl apply -f service.yaml"
                 }
             }
         }
+    }
 
-        stage("Deploy to EKS") {
-            steps {
-                script {
-                    dir('kubernetes') {
-                        sh "aws eks update-kubeconfig --name max_prod_cluster"
-                        sh "kubectl apply -f deployment.yaml"
-                        sh "kubectl apply -f service.yaml"
-                    }
-                }
-            }
+    post {
+        always {
+            sh "rm /tmp/kubeconfig"
         }
     }
 }
