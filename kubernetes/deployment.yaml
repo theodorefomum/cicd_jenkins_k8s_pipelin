@@ -17,3 +17,4 @@ spec:
         image: {{REPOSITORY_URI}}:{{IMAGE_TAG}}
         ports:
         - containerPort: 80
+---
