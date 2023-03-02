@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -17,4 +17,3 @@ spec:
         image: {{REPOSITORY_URI}}:{{IMAGE_TAG}}
         ports:
         - containerPort: 80
----
